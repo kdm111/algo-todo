@@ -2,6 +2,7 @@
 
 const Sequelize = require('sequelize');
 const config = require(__dirname + '/../config/config.json')['development'];
+const fs = require('fs')
 
 const db = {};
 const sequelize = new Sequelize(
@@ -14,15 +15,21 @@ const sequelize = new Sequelize(
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.Todo = require('./Todo')(sequelize, Sequelize);
-db.users = require('./users')(sequelize, Sequelize);
-db.problems = require('./problems')(sequelize, Sequelize);
-db.problemCategories = require('./problemCategories')(sequelize, Sequelize);
-db.problemImages = require('./problemImages')(sequelize, Sequelize);
-db.userSolves = require('./userSolves')(sequelize, Sequelize);
-
-
-
-
+const models = fs.readdirSync(__dirname)
+  .filter((file) => {
+    const fileName = file.slice(0, -3)
+    if (fileName !== 'index') {
+      console.log(fileName)
+      db[fileName] = require(`./${fileName}`)(sequelize, Sequelize)
+      return fileName
+    }
+  }
+)
+models.forEach((file) => {
+  const fileName = file.slice(0, -3)
+  if (db[fileName].associate) {
+    db[fileName].associate(db)
+  }
+})
 
 module.exports = db;

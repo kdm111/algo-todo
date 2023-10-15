@@ -1,7 +1,7 @@
-const problemCategories = (Sequelize, Datatypes) => {
-  const model = Sequelize.define("problem_categories", 
+module.exports = (Sequelize, Datatypes) => {
+  const categories = Sequelize.define("categories", 
     {
-      problem_categories_pk : {
+      categories_pk : {
         type : Datatypes.INTEGER,
         allowNull : false,
         primaryKey : true,
@@ -17,11 +17,17 @@ const problemCategories = (Sequelize, Datatypes) => {
       }
     },
     {
-      tableName: 'problem_categories',
+      tableName: 'categories',
       freezeTableName: true,
       timestamps: false,
     }
   )
-  return model
+  categories.associate = (models) => {
+    categories.hasMany(models.problems, {
+      foreignKey : {
+        name : 'problem_pk',
+      }
+    })
+  }
+  return categories
 }
-module.exports = problemCategories

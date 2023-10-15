@@ -1,5 +1,7 @@
-const problems = function (Sequelize, DataTypes) {
-  const model = Sequelize.define("problems",
+const problemImages = require("./problemImages")
+
+module.exports = function (Sequelize, DataTypes) {
+  const problems = Sequelize.define("problems",
     {
       problem_pk: {
         type: DataTypes.INTEGER,
@@ -17,7 +19,28 @@ const problems = function (Sequelize, DataTypes) {
       freezeTableName: true,
       timestamps: false,
     }
-  );
-  return model;
+  )
+  problems.associate = (models) => {
+    problems.hasMany(models.problemImages, {
+      foreignKey : {
+        name : 'problem_images_pk',
+      }
+    })
+    problems.belongsTo(models.categories, {
+      foreignKey : {
+        name : 'categories_pk',
+        allowNull : false,
+      }
+    })
+    problems.belongsToMany(models.answers, {
+      foreignKey : {
+        name : 'answer_id',
+        allowNull : false
+      },
+      through : {
+        model : 'problemAnswer'
+      }
+    })
+  }
+  return problems
 }
-module.exports = problems

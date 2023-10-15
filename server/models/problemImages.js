@@ -1,5 +1,5 @@
-const problemImages = function (Sequelize, DataTypes) {
-  const model = Sequelize.define("problem_images",
+module.exports = function (Sequelize, DataTypes) {
+  const problemImages = Sequelize.define("problem_images",
     {
       problem_images_pk: {
         type: DataTypes.INTEGER,
@@ -10,7 +10,7 @@ const problemImages = function (Sequelize, DataTypes) {
       problem_images_url: {
         type: DataTypes.STRING,
         allowNull: false,
-      }
+      },
     },
     {
       tableName: 'problem_images',
@@ -18,6 +18,13 @@ const problemImages = function (Sequelize, DataTypes) {
       timestamps: false,
     }
   );
-  return model;
+  problemImages.associate = (models) => {
+    problemImages.belongsTo(models.problems, {
+      foreignKey : {
+        name : 'problem_pk',
+        allowNull : false
+      }
+    })
+  }
+  return problemImages;
 }
-module.exports = problemImages

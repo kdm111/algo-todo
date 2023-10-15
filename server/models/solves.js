@@ -1,35 +1,41 @@
-const { sequelize } = require(".")
-
-const userSolves = (Sequelize, Datatypes) => {
-  const model = Sequelize.define("user_solves", 
+module.exports = (Sequelize, Datatypes) => {
+  const solves = Sequelize.define("solves", 
     {
-      user_solves_pk : {
+      solves_pk : {
         type : Datatypes.INTEGER,
         allowNull : false,
         primaryKey : true,
         autoIncrement : true
       },
-      user_solve : {
+      solve : {
         type : Datatypes.TEXT('long'),
         allowNull : false
       },
       solved : {
-        type : Datatypes.TINYINT,
+        type : Datatypes.BOOLEAN,
         allowNull : false,
         defaultValue : 0,
       },
       submit_time : {
         type : Datatypes.DATE,
         allowNull : false,
-        defaultValue : Sequelize.literal('now()')
+        defaultValue : Datatypes.NOW
       }
     },
     {
-      tableName : 'user_solves',
+      tableName : 'solves',
       freezeTableName : true,
       timestamps : false,
     }
   )
+  solves.associate = (models) => {
+    solves.belongsTo(models.users, {
+      foreignKey : {
+        name : 'user_pk',
+        allowNull : false
+      }
+    })
+  }
+  return solves
 }
 
-module.exports = userSolves

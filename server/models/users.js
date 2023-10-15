@@ -1,5 +1,5 @@
-const users = function (Sequelize, DataTypes) {
-  const model = Sequelize.define("users",
+module.exports = function (Sequelize, DataTypes) {
+  const users = Sequelize.define("users",
     {
       user_pk: {
         type: DataTypes.INTEGER,
@@ -17,7 +17,13 @@ const users = function (Sequelize, DataTypes) {
       freezeTableName: true,
       timestamps: false,
     }
-  );
-  return model;
+  )
+  users.associate = (models) => {
+    users.hasMany(models.solves, {
+      foreignKey : {
+        name : 'solves_pk'
+      }
+    })
+  }
+  return users;
 }
-module.exports = users
