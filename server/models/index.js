@@ -19,7 +19,6 @@ const models = fs.readdirSync(__dirname)
   .filter((file) => {
     const fileName = file.slice(0, -3)
     if (fileName !== 'index') {
-      console.log(fileName)
       db[fileName] = require(`./${fileName}`)(sequelize, Sequelize)
       return fileName
     }
