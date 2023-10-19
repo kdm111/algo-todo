@@ -18,7 +18,6 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(cors())
 
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(specs))
 app.get('/', (req, res) =>{
   res.send("hello world")
 } )
