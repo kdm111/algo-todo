@@ -33,6 +33,8 @@ jobs:
           aws sts get-caller-identity
       - name: Copy files to EC2
         run: |
+          mkdir -p ~/.ssh
+          touch ~/.ssh/known_hosts
           ssh-keyscan -H ${{ secrets.ALGO_TODO_IP }} >> ~/.ssh/known_hosts
           ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ubuntu@ec2-3-36-38-135.ap-northeast-2.compute.amazonaws.com "cd algo-todo || git pull origin main"
       - name: React Build
