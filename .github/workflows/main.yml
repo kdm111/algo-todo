@@ -36,7 +36,7 @@ jobs:
         run: | 
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 400 private_key.pem
-      - name: Git Pull Origin Mai
+      - name: Git Pull Origin Main
         run: |
           mkdir -p /home/runner/.ssh
           touch /home/runner/.ssh/known_hosts
