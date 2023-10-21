@@ -13,15 +13,16 @@ jobs:
         node-version: [18.x]
 
     steps:
-    - uses: actions/checkout@v3
-    - run: cd server
-    - name: Use Node.js ${{ matrix.node-version }}
-  
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: touch .env
-    - run: echo "${{ secrets.NODE_ENV }}" > .env
-      
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: |
+          cd server
+          npm ci
+      - run: |
+          cd server
+          touch .env
+          echo "${{ secrets.NODE_ENV }}" > .env
