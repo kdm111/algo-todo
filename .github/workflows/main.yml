@@ -35,7 +35,7 @@ jobs:
       - name: Setup SSH Key
         run: | 
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
+          chmod 400 private_key.pem
       - name: Git Pull Origin Mai
         run: |
           mkdir -p /home/runner/.ssh
