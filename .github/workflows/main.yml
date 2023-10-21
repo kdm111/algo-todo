@@ -38,10 +38,10 @@ jobs:
           chmod 600 private_key.pem
       - name: Git Pull Origin Mai
         run: |
+          ssh-keyscan -H ec2-3-36-38-135.ap-northeast-2.compute.amazonaws.com >> /home/runner/.ssh/known_hosts
           ssh -v -i private_key.pem ubuntu@${{ env.DOMAIN }} "cd algo-todo && git pull origin main"
       - name: React Build
         run: |
-          ssh-keyscan -H ec2-3-36-38-135.ap-northeast-2.compute.amazonaws.com >> /home/runner/.ssh/known_hosts
           ssh -v -i private_key.pem ubuntu@${{ env.DOMAIN }} "cd algo-todo && cd client && npm run build"        
 
       - name: Restart NGINX
