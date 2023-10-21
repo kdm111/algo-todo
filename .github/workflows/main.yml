@@ -33,7 +33,7 @@ jobs:
         run: |
           aws sts get-caller-identity
       - name: Setup SSH
-        run: |
+        run: | 
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
       - name: Copy files to EC2  
