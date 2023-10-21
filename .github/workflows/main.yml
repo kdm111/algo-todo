@@ -7,8 +7,9 @@ on:
       - main
 
 env:
-  AWS_REGION : ap-northeast-2
-  AWS_ROLE_ARN : arn:aws:iam::084982019659:role/GitHubAction-AssumeRoleWithAction
+  AWS_REGION: ap-northeast-2
+  AWS_ROLE_ARN: arn:aws:iam::084982019659:role/GitHubAction-AssumeRoleWithAction
+
 
 permissions:
   id-token: write
@@ -20,7 +21,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Git clone the repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3 # 레포 클론
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -30,4 +31,15 @@ jobs:
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
+      - name: Copy files to EC2
+        run: |
+          ssh-keyscan -H ${{ secrets.ALGO_TODO_IP }} >> ~/.ssh/known_hosts
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ubuntu@ec2-3-36-38-135.ap-northeast-2.compute.amazonaws.com "cd algo-todo || git pull origin main"
+      - name: React Build
+        run: |
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ubuntu@ec2-3-36-38-135.ap-northeast-2.compute.amazonaws.com "cd algo-todo || cd client || npm run build"        
+
+      - name: Restart NGINX
+        run: |
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ubuntu@ec2-3-36-38-135.ap-northeast-2.compute.amazonaws.com "sudo systemctl restart nginx"   
 
