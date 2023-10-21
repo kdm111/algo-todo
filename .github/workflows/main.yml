@@ -32,11 +32,11 @@ jobs:
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
-      - name: Setup SSH
+      - name: Setup SSH Key
         run: | 
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
-      - name: Copy files to EC2  
+      - name: Git Pull
         run: |
           ssh -v -i private_key.pem ubuntu@${{ env.DOMAIN }} "cd algo-todo && git pull origin main"
       - name: React Build
