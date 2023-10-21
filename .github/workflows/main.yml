@@ -7,7 +7,7 @@ on:
       - main
 
 env:
-  AWS_REGION : <"ap-northeast-2">
+  AWS_REGION : ap-northeast-2
   AWS_ROLE_ARN : <arn:aws:iam::084982019659:oidc-provider/token.actions.githubusercontent.com>
 
 permissions:
