@@ -5,12 +5,13 @@ on:
   push:
     branches:
       - main
-
+runs-on: 
+  self-hosted
 env:
   AWS_REGION: ap-northeast-2
   AWS_ROLE_ARN: arn:aws:iam::084982019659:role/GitHubAction-AssumeRoleWithAction
   DOMAIN: ec2-3-36-38-135.ap-northeast-2.compute.amazonaws.com
-
+  SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
 permissions:
   id-token: write
@@ -34,7 +35,7 @@ jobs:
           aws sts get-caller-identity
       - name: Setup SSH Key
         run: | 
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
+          echo ${{ SSH_KEY }} > private_key.pem
           chmod 400 private_key.pem
       - name: Git Pull Origin Main
         run: |
