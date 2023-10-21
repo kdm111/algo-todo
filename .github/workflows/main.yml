@@ -13,6 +13,6 @@ jobs:
         run : |
           mkdir -p ~/.ssh  
           ssh-keyscan -H ${{ secrets.PUBLIC_DNS }} >> ~/.ssh/known_hosts
-          echo "${{ secrets.EC2_ACCESS_KEY }}" > private_key.pem
+          echo ${{ secrets.EC2_ACCESS_KEY }} > private_key.pem
           chmod 400 private_key.pem
           ssh -i private_key.pem ubuntu@${{ secrets.PUBLIC_DNS }} "echo 'hello'"
