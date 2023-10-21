@@ -32,17 +32,21 @@ jobs:
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
+      - name: Setup SSH key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
+          chmod 400 private_key.pem
       - name: Copy files to EC2
         run: |
           mkdir -p ~/.ssh
           touch ~/.ssh/known_hosts
           ssh-keyscan -H ${{ env.DOMAIN }} >> ~/.ssh/known_hosts
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ubuntu@${{ env.DOMAIN }} "cd algo-todo && git pull origin main"
+          ssh -i private_key.pem ubuntu@${{ env.DOMAIN }} "cd algo-todo && git pull origin main"
       - name: React Build
         run: |
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ubuntu@${{ env.DOMAIN }} "cd algo-todo && cd client && npm run build"        
+          ssh -i private_key.pem ubuntu@${{ env.DOMAIN }} "cd algo-todo && cd client && npm run build"        
 
       - name: Restart NGINX
         run: |
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ubuntu@${{ env.DOMAIN }} "sudo systemctl restart nginx"   
+          ssh -i private_key.pem ubuntu@${{ env.DOMAIN }} "sudo systemctl restart nginx"   
 
