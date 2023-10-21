@@ -16,7 +16,7 @@ permissions:
   id-token: write
   contents: read
 
-# 워크플로우 내의 작업
+# 워크플로우 내의 작업  
 jobs:
   AssumeRoleAndCallIdentity:
     runs-on: ubuntu-22.04  
@@ -36,17 +36,14 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
-      - name: Copy files to EC2
+      - name: Copy files to EC2  
         run: |
-          mkdir -p ~/.ssh
-          touch ~/.ssh/known_hosts
-          ssh-keyscan -H ${{ env.DOMAIN }} >> ~/.ssh/known_hosts
-          ssh -i private_key.pem ubuntu@${{ env.DOMAIN }} "cd algo-todo && git pull origin main"
+          ssh -v -i private_key.pem ubuntu@${{ env.DOMAIN }} "cd algo-todo && git pull origin main"
       - name: React Build
         run: |
-          ssh -i private_key.pem ubuntu@${{ env.DOMAIN }} "cd algo-todo && cd client && npm run build"        
+          ssh -v -i private_key.pem ubuntu@${{ env.DOMAIN }} "cd algo-todo && cd client && npm run build"        
 
       - name: Restart NGINX
         run: |
-          ssh -i private_key.pem ubuntu@${{ env.DOMAIN }} "sudo systemctl restart nginx"   
+          ssh -v -i private_key.pem ubuntu@${{ env.DOMAIN }} "sudo systemctl restart nginx"   
 
