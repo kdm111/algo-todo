@@ -1,3 +1,4 @@
+
 name: deploy to AWS
 
 # main 브랜치에서 푸쉬가 일어났을 때 작성
@@ -5,8 +6,7 @@ on:
   push:
     branches:
       - main
-runs-on: 
-  self-hosted
+
 env:
   AWS_REGION: ap-northeast-2
   AWS_ROLE_ARN: arn:aws:iam::084982019659:role/GitHubAction-AssumeRoleWithAction
@@ -20,34 +20,14 @@ permissions:
 # 워크플로우 내의 작업    
 jobs:
   AssumeRoleAndCallIdentity:
-    runs-on: ubuntu-22.04  
+    runs-on: self-hosted  
     steps:
-      - name: Git clone the repo
-        uses: actions/checkout@v3 # 레포 클론
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v2
+      - uses: actions/checkout@v3 # 레포 클론
+      - name: Use Node.js
+        uses: actions/setup-node@v3
         with:
-          role-to-assume: ${{ env.AWS_ROLE_ARN }}
-          role-session-name: GitHub_to_AWS_via_FederatedOIDC
-          aws-region: ${{ env.AWS_REGION }}
-      - name: Sts GetCallerIdentity
-        run: |
-          aws sts get-caller-identity
-      - name: Setup SSH Key
-        run: | 
-          echo ${{ SSH_KEY }} > private_key.pem
-          chmod 400 private_key.pem
-      - name: Git Pull Origin Main
-        run: |
-          mkdir -p /home/runner/.ssh
-          touch /home/runner/.ssh/known_hosts
-          ssh-keyscan -H ec2-3-36-38-135.ap-northeast-2.compute.amazonaws.com >> /home/runner/.ssh/known_hosts
-          ssh -v -i private_key.pem ubuntu@${{ env.DOMAIN }} "cd algo-todo && git pull origin main"
-      - name: React Build
-        run: |
-          ssh -v -i private_key.pem ubuntu@${{ env.DOMAIN }} "cd algo-todo && cd client && npm run build"        
+          node_version: 20.x
+          cache: 'npm'
+      - run: npm i
 
-      - name: Restart NGINX
-        run: |
-          ssh -v -i private_key.pem ubuntu@${{ env.DOMAIN }} "sudo systemctl restart nginx"   
 
