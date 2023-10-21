@@ -19,7 +19,7 @@ permissions:
 # 워크플로우 내의 작업
 jobs:
   AssumeRoleAndCallIdentity:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04  
     steps:
       - name: Git clone the repo
         uses: actions/checkout@v3 # 레포 클론
