@@ -36,7 +36,7 @@ jobs:
         run: | 
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
-      - name: Git Pull
+      - name: Git Pull Origin Main 
         run: |
           ssh -v -i private_key.pem ubuntu@${{ env.DOMAIN }} "cd algo-todo && git pull origin main"
       - name: React Build
