@@ -1,6 +1,6 @@
 .card {
   min-width: 200px;
-  background-color: lightgray;
+  background-color: red;
   aspect-ratio: 1;
   border-radius: 1rem;
 }
