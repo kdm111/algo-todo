@@ -16,7 +16,7 @@ permissions:
   id-token: write
   contents: read
 
-# 워크플로우 내의 작업  
+# 워크플로우 내의 작업    
 jobs:
   AssumeRoleAndCallIdentity:
     runs-on: ubuntu-22.04  
